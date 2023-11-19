@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- SheetJS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
+    <script>
+        function readExcel() {
+            let input = event.target;
+            let reader = new FileReader();
+
+            reader.onload = function () {
+                let data = reader.result;
+                let workBook = XLSX.read(data, { type: 'binary' });
+
+                workBook.SheetNames.forEach(function (sheetName, index) {
+                    if (index === 0) {
+                        let rows = XLSX.utils.sheet_to_json(workBook.Sheets[sheetName]);
+                        console.log(JSON.stringify(rows));
+
+                        // document.querySelector('[name="word_list"]').value = JSON.stringify(rows);
+                    }
+                });
+            };
+            reader.readAsBinaryString(input.files[0]);
+        }
+    </script>
 </head>
 <body>
-
+    <form method="post" action="/upload">
+        <input type="hidden" name="word_list" value="한글">
+        <div>
+            <input type="file" onchange="readExcel()">
+            <button type="submit">저장2</button>
+        </div>
+    </form>
 </body>
 </html>

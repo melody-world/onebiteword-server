@@ -47,4 +47,25 @@ public class WordService {
         wordRepository.saveAll(wordEntityList);
     }
 
+    public String getWordList() {
+        List<WordEntity> wordList = wordRepository.findAll();
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (WordEntity wordEntity : wordList) {
+            JSONObject obj = new JSONObject();
+
+            obj.put("wordSeq" , wordEntity.getSeq());
+            obj.put("wordName", wordEntity.getWordName());
+            obj.put("wordMean", wordEntity.getWordMean());
+
+            jsonArray.add(obj);
+        }
+
+        jsonObject.put("data", jsonArray);
+
+        return jsonObject.toString();
+    }
+
 }
